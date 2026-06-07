@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GovMart GeM — Government Procurement Catalogue</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Noto+Sans+Devanagari:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0B1F3A;
+  --navy2: #122B50;
+  --blue: #1A4B8C;
+  --accent: #FF6B1A;
+  --accent2: #FFB347;
+  --gold: #D4A017;
+  --green: #1A8C5A;
+  --cream: #F7F2E8;
+  --white: #FFFFFF;
+  --gray: #8A93A6;
+  --border: rgba(255,255,255,0.08);
+  --card-bg: rgba(255,255,255,0.04);
+  --shadow: 0 20px 60px rgba(0,0,0,0.35);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: 'DM Sans', sans-serif; background: var(--navy); color: var(--white); min-height: 100vh; overflow-x: hidden; }
+body.lang-hi { font-family: 'Noto Sans Devanagari', 'DM Sans', sans-serif; }
+body::before {
+  content: ''; position: fixed; inset: 0; z-index: 0;
+  background-image:
+    radial-gradient(ellipse 80% 50% at 10% 0%, rgba(26,75,140,0.35) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 40% at 90% 100%, rgba(255,107,26,0.12) 0%, transparent 60%),
+    repeating-linear-gradient(0deg, transparent, transparent 60px, rgba(255,255,255,0.012) 60px, rgba(255,255,255,0.012) 61px),
+    repeating-linear-gradient(90deg, transparent, transparent 60px, rgba(255,255,255,0.012) 60px, rgba(255,255,255,0.012) 61px);
+  pointer-events: none;
+}
+nav { position: sticky; top: 0; z-index: 999; background: rgba(11,31,58,0.92); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); padding: 0 32px; display: flex; align-items: center; justify-content: space-between; height: 68px; }
+.nav-logo { display: flex; align-items: center; gap: 12px; }
+.logo-mark { width: 42px; height: 42px; border-radius: 10px; background: linear-gradient(135deg, var(--accent), var(--accent2)); display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 800; color: white; font-family: 'Syne', sans-serif; box-shadow: 0 4px 16px rgba(255,107,26,0.4); }
+.logo-text { font-family: 'Syne', sans-serif; }
+.logo-text strong { font-size: 18px; font-weight: 800; letter-spacing: -0.5px; }
+.logo-text small { display: block; font-size: 10.5px; color: var(--gray); font-weight: 400; letter-spacing: 0.5px; }
+.nav-right { display: flex; align-items: center; gap: 16px; }
+.gem-badge { display: flex; align-items: center; gap: 6px; background: rgba(26,140,90,0.15); border: 1px solid rgba(26,140,90,0.35); border-radius: 20px; padding: 5px 14px; font-size: 12px; color: #4ECB8A; font-weight: 500; }
+.gem-badge::before { content: '●'; font-size: 8px; animation: pulse 1.5s infinite; }
+@keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.3; } }
+.lang-toggle { display: flex; align-items: center; background: rgba(255,255,255,0.06); border: 1px solid var(--border); border-radius: 24px; overflow: hidden; cursor: pointer; }
+.lang-btn { padding: 7px 16px; font-size: 13px; font-weight: 600; border: none; background: transparent; color: rgba(255,255,255,0.45); cursor: pointer; transition: all 0.25s; letter-spacing: 0.3px; }
+.lang-btn.active { background: var(--accent); color: white; border-radius: 22px; }
+.search-wrap { position: relative; }
+.search-wrap input { background: rgba(255,255,255,0.07); border: 1px solid var(--border); border-radius: 24px; padding: 8px 16px 8px 40px; color: white; font-size: 13.5px; width: 220px; outline: none; transition: all 0.2s; font-family: inherit; }
+.search-wrap input::placeholder { color: rgba(255,255,255,0.3); }
+.search-wrap input:focus { border-color: var(--accent); background: rgba(255,255,255,0.1); }
+.search-wrap .icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); opacity: 0.4; font-size: 14px; }
+.hero { position: relative; z-index: 1; padding: 80px 32px 60px; text-align: center; }
+.hero-eyebrow { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,107,26,0.12); border: 1px solid rgba(255,107,26,0.3); border-radius: 20px; padding: 6px 18px; margin-bottom: 24px; font-size: 12px; font-weight: 600; color: var(--accent2); letter-spacing: 1px; }
+.hero h1 { font-family: 'Syne', sans-serif; font-size: clamp(32px, 5vw, 58px); font-weight: 800; line-height: 1.1; letter-spacing: -1px; margin-bottom: 20px; }
+.hero h1 span.hl { color: var(--accent); }
+.hero p { font-size: 16px; color: rgba(255,255,255,0.6); max-width: 580px; margin: 0 auto 36px; line-height: 1.7; }
+.hero-stats { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; }
+.stat { text-align: center; }
+.stat-num { font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800; color: var(--accent2); }
+.stat-label { font-size: 12px; color: var(--gray); margin-top: 2px; }
+.filter-bar { position: relative; z-index: 1; padding: 0 32px 32px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+.filter-chip { padding: 8px 20px; border-radius: 24px; border: 1px solid var(--border); background: var(--card-bg); color: rgba(255,255,255,0.6); font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s; white-space: nowrap; font-family: inherit; }
+.filter-chip:hover { border-color: var(--accent); color: var(--accent); }
+.filter-chip.active { background: var(--accent); color: white; border-color: var(--accent); }
+.catalogue { position: relative; z-index: 1; padding: 0 32px 80px; }
+.cat-section { margin-bottom: 56px; display: none; }
+.cat-section.visible { display: block; }
+.section-header { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
+.section-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+.section-title { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 700; }
+.section-sub { font-size: 13px; color: var(--gray); margin-top: 3px; }
+.section-line { flex: 1; height: 1px; background: linear-gradient(90deg, rgba(255,255,255,0.15), transparent); }
+.cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+.item-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 22px; transition: all 0.25s; cursor: default; position: relative; overflow: hidden; animation: cardIn 0.4s ease both; }
+@keyframes cardIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+.item-card::before { content: ''; position: absolute; inset: 0; border-radius: 14px; background: linear-gradient(135deg, rgba(255,107,26,0.06), transparent); opacity: 0; transition: opacity 0.25s; }
+.item-card:hover { border-color: rgba(255,107,26,0.35); transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,0,0,0.3); }
+.item-card:hover::before { opacity: 1; }
+.card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+.card-emoji { font-size: 28px; }
+.gem-tag { font-size: 10px; font-weight: 700; letter-spacing: 0.8px; padding: 3px 8px; border-radius: 4px; background: rgba(26,140,90,0.2); color: #4ECB8A; border: 1px solid rgba(26,140,90,0.3); }
+.card-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px; margin-bottom: 4px; line-height: 1.3; }
+.card-name-sub { font-size: 12px; color: rgba(255,255,255,0.4); margin-bottom: 10px; font-family: 'Noto Sans Devanagari', sans-serif; }
+.card-spec { font-size: 12px; color: var(--gray); margin-bottom: 14px; line-height: 1.5; }
+.price-block { background: rgba(255,255,255,0.05); border-radius: 8px; padding: 10px 14px; }
+.price-label { font-size: 11px; color: var(--gray); margin-bottom: 2px; }
+.price-range { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 14px; color: var(--accent2); }
+.price-unit { font-size: 10px; color: var(--gray); margin-top: 2px; }
+.no-results { text-align: center; padding: 80px 20px; color: var(--gray); font-size: 15px; display: none; }
+footer { position: relative; z-index: 1; background: rgba(0,0,0,0.35); border-top: 1px solid var(--border); padding: 48px 32px 32px; text-align: center; }
+footer .footer-logo { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; margin-bottom: 8px; }
+footer p { font-size: 13px; color: var(--gray); line-height: 1.7; max-width: 500px; margin: 0 auto 24px; }
+.contact-row { display: flex; justify-content: center; gap: 32px; flex-wrap: wrap; margin-bottom: 28px; }
+.contact-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: rgba(255,255,255,0.65); }
+.contact-item a { color: var(--accent); text-decoration: none; }
+.footer-badges { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+.fbadge { background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; padding: 8px 16px; font-size: 11.5px; color: rgba(255,255,255,0.5); }
+.footer-copy { margin-top: 32px; font-size: 11px; color: rgba(255,255,255,0.2); }
+.en { display: inline; } .hi { display: none; }
+body.lang-hi .en { display: none; } body.lang-hi .hi { display: inline; }
+.en-block { display: block; } .hi-block { display: none; }
+body.lang-hi .en-block { display: none; } body.lang-hi .hi-block { display: block; }
+@media (max-width: 640px) {
+  nav { padding: 0 16px; } .hero { padding: 50px 16px 40px; }
+  .filter-bar, .catalogue { padding-left: 16px; padding-right: 16px; }
+  .cards-grid { grid-template-columns: 1fr; } .search-wrap input { width: 130px; }
+  .hero-stats { gap: 20px; } nav .gem-badge { display: none; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">
+    <div class="logo-mark">G</div>
+    <div class="logo-text">
+      <strong>GovMart GeM</strong>
+      <small class="en-block">Government e-Marketplace Supplier</small>
+      <small class="hi-block">सरकारी ई-मार्केटप्लेस आपूर्तिकर्ता</small>
+    </div>
+  </div>
+  <div class="nav-right">
+    <div class="gem-badge">GeM Registered</div>
+    <div class="search-wrap">
+      <span class="icon">🔍</span>
+      <input type="text" id="searchInput" placeholder="Search items..." oninput="filterSearch()">
+    </div>
+    <div class="lang-toggle">
+      <button class="lang-btn active" id="btnEN" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" id="btnHI" onclick="setLang('hi')">हिं</button>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-eyebrow">🏛️ <span class="en">Authorized GeM Portal Supplier</span><span class="hi">अधिकृत GeM पोर्टल आपूर्तिकर्ता</span></div>
+  <h1><span class="en">Government <span class="hl">Procurement</span><br>Made Simple</span><span class="hi">सरकारी <span class="hl">खरीद</span><br>आसान बनाएं</span></h1>
+  <p class="en-block">Complete catalogue of items supplied to Municipal Corporations, Nagar Parishads, PWD, Road Construction & Government Offices — all GeM compliant with fair market pricing.</p>
+  <p class="hi-block">नगर निगम, नगर परिषद, PWD, सड़क निर्माण और सरकारी कार्यालयों को आपूर्ति की जाने वाली वस्तुओं का पूर्ण कैटालॉग — उचित बाजार मूल्य के साथ।</p>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-num">200+</div><div class="stat-label en-block">Items Listed</div><div class="stat-label hi-block">सूचीबद्ध वस्तुएं</div></div>
+    <div class="stat"><div class="stat-num">8</div><div class="stat-label en-block">Categories</div><div class="stat-label hi-block">श्रेणियां</div></div>
+    <div class="stat"><div class="stat-num">GeM</div><div class="stat-label en-block">Portal Verified</div><div class="stat-label hi-block">पोर्टल सत्यापित</div></div>
+    <div class="stat"><div class="stat-num">GST</div><div class="stat-label en-block">Compliant</div><div class="stat-label hi-block">अनुपालन</div></div>
+  </div>
+</section>
+
+<div class="filter-bar">
+  <button class="filter-chip active" onclick="filterCat('all')"><span class="en">All Items</span><span class="hi">सभी वस्तुएं</span></button>
+  <button class="filter-chip" onclick="filterCat('lighting')">💡 <span class="en">Street Lighting</span><span class="hi">स्ट्रीट लाइटिंग</span></button>
+  <button class="filter-chip" onclick="filterCat('surveillance')">📷 <span class="en">Surveillance</span><span class="hi">निगरानी</span></button>
+  <button class="filter-chip" onclick="filterCat('road')">🚧 <span class="en">Road Construction</span><span class="hi">सड़क निर्माण</span></button>
+  <button class="filter-chip" onclick="filterCat('office')">🏢 <span class="en">Office Supplies</span><span class="hi">कार्यालय सामग्री</span></button>
+  <button class="filter-chip" onclick="filterCat('sanitation')">🧹 <span class="en">Sanitation</span><span class="hi">स्वच्छता</span></button>
+  <button class="filter-chip" onclick="filterCat('signage')">🪧 <span class="en">Signage & Safety</span><span class="hi">साइनेज और सुरक्षा</span></button>
+  <button class="filter-chip" onclick="filterCat('electrical')">⚡ <span class="en">Electrical</span><span class="hi">विद्युत</span></button>
+  <button class="filter-chip" onclick="filterCat('furniture')">🪑 <span class="en">Furniture</span><span class="hi">फर्नीचर</span></button>
+</div>
+
+<div class="catalogue" id="catalogue">
+<div class="no-results" id="noResults">😕 No items found. Try a different search.</div>
+
+<!-- ══ 1. STREET LIGHTING ══ -->
+<div class="cat-section visible" data-cat="lighting">
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(255,179,71,0.15);">💡</div>
+    <div><div class="section-title"><span class="en">Street Lighting</span><span class="hi">स्ट्रीट लाइटिंग</span></div>
+    <div class="section-sub"><span class="en">LED Poles, High Mast, Solar — Municipal Grade</span><span class="hi">LED पोल, हाई मास्ट, सोलर — नगरपालिका ग्रेड</span></div></div>
+    <div class="section-line"></div>
+  </div>
+  <div class="cards-grid">
+    <div class="item-card" data-keywords="LED street light 45W sadak batti pole bracket">
+      <div class="card-top"><div class="card-emoji">🔆</div><div class="gem-tag">GeM</div></div>
+      <div class="card-name"><span class="en">LED Street Light — 45W</span><span class="hi">LED स्ट्रीट लाइट — 45W</span></div>
+      <div class="card-name-sub"><span class="en">स्ट्रीट लाइट 45 वाट</span><span class="hi">Street Light 45W</span></div>
+      <div class="card-spec"><span class="en">IP66, 120 lm/W, Aluminium housing, 5yr warranty, with arm bracket</span><span class="hi">IP66, 120 lm/W, एल्युमीनियम हाउसिंग, 5 वर्ष वारंटी, आर्म ब्रैकेट सहित</span></div>
+      <div class="price-block"><div class="price-label"><span class="en">Fair Price Range</span><span class="hi">उचित मूल्य सीमा</span></div><div class="price-range">₹3,500 – ₹5,500</div><div class="price-unit"><span class="en">per unit (incl. bracket)</span><span class="hi">प्रति नग (ब्रैकेट सहित)</span></div></div>
+    </div>
+    <div class="item-card" data-keywords="LED street light 72W 100W highway arterial road batti">
+      <div class="card-top"><div class="card-emoji">🔆</div><div class="gem-tag">GeM</div></div>
+      <div class="card-name"><span class="en">LED Street Light — 72W/100W</span><span class="hi">LED स्ट्रीट लाइट — 72W/100W</span></div>
+      <div class="card-name-sub"><span class="en">स्ट्रीट लाइट 72-100 वाट</span><span class="hi">Street Light 72-100W</span></div>
+      <div class="card-spec"><span class="en">Highway/arterial roads, IP66, toughened glass, MSME/BIS certified</span><span class="hi">हाईवे/आर्टेरियल रोड, IP66, टेम्पर्ड ग्लास, BIS प्रमाणित</span></div>
+      <div class="price-block"><div class="price-label"><span class="en">Fair Price Range</span><span class="hi">उचित मूल्य सीमा</span></div><div class="price-range">₹7,000 – ₹12,000</div><div class="price-unit"><span class="en">per unit</span><span class="hi">प्रति नग</span></div></div>
+    </div>
+    <div class="item-card" data-keywords="high mast light 12m pole LED haimas foundation">
+      <div class="card-top"><div class="card-emoji">🗼</div><div class="gem-tag">GeM</div></div>
+      <div class="card-name"><span class="en">High Mast Light — 12m</span><span class="hi">हाई मास्ट लाइट — 12 मीटर</span></div>
+      <div class="card-name-sub"><span class="en">हाई मास्ट पोल 12 मीटर</span><span class="hi">High Mast Pole 12m</span></div>
+      <div class="card-spec"><span class="en">Hot-dip galvanized, LED luminaires, foundation bolts, IS 875 compliant</span><span class="hi">हॉट-डिप गैल्वेनाइज्ड, LED लुमिनेयर, फाउंडेशन बोल्ट, IS 875</span></div>
+      <div class="price-block"><div class="price-label"><span class="en">Fair Price Range</span><span class="hi">उचित मूल्य सीमा</span></div><div class="price-range">₹1,20,000 – ₹1,80,000</div><div class="price-unit"><span class="en">per unit (complete system)</span><span class="hi">प्रति नग (पूर्ण सिस्टम)</span></div></div>
+    </div>
+    <div class="item-card" data-keywords="high mast light 16m 20m pulley motorized highway intersection haimas">
+      <div class="card-top"><div class="card-emoji">🗼</div><div class="gem-tag">GeM</div></div>
+      <div class="card-name"><span class="en">High Mast Light — 16m/20m</span><span class="hi">हाई मास्ट लाइट — 16/20 मीटर</span></div>
+      <div class="card-name-sub"><span class="en">हाई मास्ट पोल 16-20 मीटर</span><span class="hi">High Mast 16-20m</span></div>
+      <div class="card-spec"><span class="en">Pulley system, motorized lowering, 6–8 LED heads, highways/intersections</span><span class="hi">पुली सिस्टम, मोटराइज्ड लोअरिंग, 6–8 LED हेड्स, हाईवे/चौराहे</span></div>
+      <div class="price-block"><div class="price-label"><span class="en">Fair Price Range</span><span class="hi">उचित मूल्य सीमा</span></div><div class="price-range">₹2,50,000 – ₹4,50,000</div><div class="price-unit"><span class="en">per unit</span><span class="hi">प्रति नग</span></div></div>
+    </div>
+    <div class="item-card" data-keywords="solar street light 30W 40W MNRE battery motion sensor">
+      <div class="card-top"><div class="card-emoji">☀️</div><div class="gem-tag">GeM</div></div>
+      <div class="card-name"><span class="en">Solar Street Light — 30W/40W</span><span class="hi">सोलर स्ट्रीट लाइट — 30W/40W</span></div>
+      <div class="card-name-sub"><span class="en">सोलर स्ट्रीट लाइट</span><span class="hi">Solar Street Light</span></div>
+      <div class="card-spec"><span class="en">All-in-one, Li-ion battery, motion sensor, MNRE approved, 5yr warranty</span><span class="hi">ऑल-इन-वन, लिथियम आयन बैटरी, मोशन सेंसर, MNRE अनुमोदित</span></div>
+      <div class="price-block"><div class="price-label"><span class="en">Fair Price Range</span><span class="hi">उचित मूल्य सीमा</span></div><div class="price-range">₹8,000 – ₹18,000</div><div class="price-unit"><span class="en">per unit (standalone)</span><span class="hi">प्रति नग</span></div></div>
+    </div>
+    <div class="item-card" data-keywords="GI octagonal street light pole 6m 9m galvanized anchor">
+      <div class="card-top"><div class="card-emoji">🪝</div><div class="gem-tag">GeM</div></div>
+      <div class="card-name"><span class="en">GI Octagonal Street Light Pole</span><span class="hi">GI ऑक्टागोनल स्ट्रीट लाइट पोल</span></div>
+      <div class="card-name-sub"><span class="en">जीआई पोल 6/9 मीटर</span><span class="hi">GI Pole 6/9m</span></div>
+      <div class="card-spec"><span class="en">6m/9m, hot-dip galvanized, IS 2713, with base plate & anchor bolts</span><span class="hi">6m/9m, हॉट-डिप गैल्वेनाइज्ड, IS 2713, बेस प्लेट और एंकर बोल्ट</span></div>
+      <div class="price-block"><div class="price-label"><span class="en">Fair Price Range</span><span class="hi">उचित मूल्य सीमा</span></div><div class="price-range">₹4,500 – ₹9,000</div><div class="price-unit"><span class="en">per pole</span><span class="hi">प्रति पोल</span></div></div>
+    </div>
+    <div class="item-card" data-keywords="LED flood light outdoor area light 100W 150W 200W">
+      <div class="card-top"><div class="card-emoji">🔦</div><div class="gem-tag">GeM</div></div>
+      <div class="card-name"><span class="en">LED Flood Light — 100W/150W/200W</span><span class="hi">LED फ्लड लाइट — 100W/150W/200W</span></div>
+      <div class="card-name-sub"><span class="en">फ्लड लाइट आउटडोर</span><span class="hi">Flood Light Outdoor</span></div>
+      <div class="card-spec"><span class="en">IP65, die-cast aluminium, grounds/stadiums/parking, 5yr warranty</span><span class="hi">IP65, डाई-कास्ट एल्युमीनियम, मैदान/स्टेडियम/पार्किंग, 5 वर्ष वारंटी</span></div>
+      <div class="price-block"><div class="price-label"><span class="en">Fair Price Range</span><span class="hi">उचित मूल्य सीमा</span></div><div class="price-range">₹3,800 – ₹9,500</div><div class="price-unit"><span class="en">per unit</span><span class="hi">प्रति नग</span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 2. SURVEILLANCE ══ -->
+<div class="cat-section visible" data-cat="surveillance">
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(26,75,140,0.2);">📷</div>
+    <div><div class="section-title"><span class="en">Surveillance & Security</span><span class="hi">निगरानी और सुरक्षा</span></div>
+    <div class="section-sub"><span class="en">CCTV, NVR, PTZ — Smart City Ready</span><span class="hi">CCTV, NVR, PTZ — स्मार्ट सिटी तैयार</span></div></div>
+    <div class="section-line"></div>
+  </div>
+  <div class="cards-grid">
+    <div class="item-card" data-keywords="CCTV camera 2MP 4MP IP bullet outdoor surveillance IR PoE">
+      <div class="card-top"><div class="card-emoji">📷</div><div class="gem-tag">GeM</div></div>
+      <div class="card-name"><span class="en">IP Bullet Camera — 2MP/4MP</span><span class="hi">IP बुलेट कैमरा — 2MP/4MP</span></div>
+      <div class="card-name-sub"><span class="en">आईपी कैमरा 2-4 मेगापिक्सल</span><span class="hi">IP Camera 2-4MP</span></div>
+      <div class="card-spec"><span class="en">IR 30m, IP66, H.265+, PoE, outdoor, Make in India</span><span class="hi">IR 30m रेंज, IP66, H.265+, PoE, आउटडोर, मेक इन इंडिया</span></div>
+      <div class="price-block"><div class="price-label"><span class="en">Fair Price Range</span><span class="hi">उचित मूल्य सीमा</span></div><div class="price-range">₹2,500 – ₹5,500</div><div class="price-unit"><span class="en">per camera</span><span class="hi">प्रति कैमरा</span></div></div>
+    </div>
+    <div class="item-card" data-keywords="CCTV camera 5MP 8MP 4K IP varifocal traffic monitoring">
+      <div class="card-top"><div class="card-emoji">📹</div><div class="gem-tag">GeM</div></div>
+      <div class="card-name"><span class="en">IP Camera — 5MP/8MP (4K)</span><span class="hi">IP कैमरा — 5MP/8MP (4K)</span></div>
+      <div class="card-name-sub"><span class="en">हाई रेज़ोलूशन 5-8 मेगापिक्सल</span><span class="hi">High Resolution 5-8MP</span></div>
+      <div class="card-spec"><span class="en">Varifocal, IR 50m, IP67, WDR, Smart detection, traffic monitoring</span><span class="hi">वेरीफोकल, IR 50m, IP67, WDR, स्मार्ट डिटेक्शन, ट्रैफिक मॉनिटरिंग</span></div>
+      <div class="price-block"><div class="price-label"><span class="en">Fair Price Range</span><span class="hi">उचित मूल्य सीमा</span></div><div class="price-range">₹6,000 – ₹14,000</div><div class="price-unit"><span class="en">per camera</span><span class="hi">प्रति कैमरा</span></div></div>
+    </div>
+    <div class="item-card" data-keywords="PTZ speed dome camera pan tilt zoom 36x optical traffic police junction">
+      <div class="card-top"><div class="card-emoji">🔭</div><div class="gem-tag">GeM</div></div>
+      <div class="card-name"><span class="en">PTZ Speed Dome Camera</span><span class="hi">PTZ स्पीड डोम कैमरा</span></div>
+      <div class="card-name-sub"><span class="en">पैन-टिल्ट-ज़ूम कैमरा</span><span class="hi">Pan-Tilt-Zoom Camera</span></div>
+      <div class="card-spec"><span class="en">36x optical zoom, 200m IR, auto-tracking, for junctions & parks</span><span class="hi">36x ऑप्टिकल ज़ूम, 200m IR, ऑटो-ट्रैकिंग, चौराहों और पार्कों के लिए</span></div>
+      <div class="price-block"><div class="price-label"><span class="en">Fair Price Range</span><span class="hi">उचित मूल्य सीमा</span></div><div class="price-range">₹25,000 – ₹55,000</div><div class="price-unit"><span class="en">per unit</span><span class="hi">प्रति नग</span></div></div>
+    </div>
+    <div class="item-card" data-keywords="NVR DVR 8 16 32 channel recorder 4K HDD PoE ONVIF">
+      <div class="card-top"><div class="card-emoji">🖥️</div><div class="gem-tag">GeM</div></div>
+      <div class="card-name"><span class="en">NVR — 8/16/32 Channel</span><span class="hi">NVR — 8/16/32 चैनल</span></div>
+      <div class="card-name-sub"><span class="en">नेटवर्क वीडियो रिकॉर्डर</span><span class="hi">Network Video Recorder</span></div>
+      <div class="card-spec"><span class="en">4K output, HDD slots, remote viewing, PoE ports, ONVIF compatible</span><span class="hi">4K आउटपुट, HDD स्लॉट, रिमोट व्यूइंग, PoE पोर्ट</span></div>
+      <div class="price-block"><div class="price-label"><span class="en">Fair Price Range</span><span class="hi">उचित मूल्य सीमा</span></div><div class="price-range">₹5,000 – ₹22,000</div><div class="price-unit"><span class="en">8ch – 32ch</span><span class="hi">8ch – 32ch</span></div></div>
+    </div>
+    <div class="item-card" data-keywords="HDD hard disk 2TB 4TB surveillance WD purple seagate skyhawk 24x7">
+      <div class="card-top"><div class="card-emoji">💾</div><div class="gem-tag">GeM</div></div>
+      <div class="card-name"><span class="en">Surveillance HDD — 2TB/4TB</span><span class="hi">सर्विलांस HDD — 2TB/4TB</span></div>
+      <div class="card-name-sub"><span class="en">हार्ड डिस्क स्टोरेज</span><span class="hi">Hard Disk Storage</span></div>
+      <div class="card-spec"><span class="en">WD Purple / Seagate SkyHawk, 24×7 rated, CCTV optimized</span><span class="hi">WD Purple / Seagate SkyHawk, 24×7 रेटेड, CCTV ऑप्टिमाइज़्ड</span></div>
+      <div class="price-block"><div class="price-label"><span class="en">Fair Price Range</span><span class="hi">उचित मूल्य सीमा</span></div><div class="price-range">₹4,500 – ₹9,500</div><div class="price-unit"><span class="en">2TB – 4TB</span><span class="hi">2TB – 4TB</span></div></div>
+    </div>
+    <div class="item-card" data-keywords="CCTV cable CAT6 RG6 coaxial conduit junction box installation kit wiring">
+      <div class="card-top"><div class="card-emoji">🔌</div><div class="gem-tag">GeM</div></div>
+      <div class="card-name"><span class="en">CCTV Cable & Installation Kit</span><span class="hi">CCTV केबल और इंस्टॉलेशन किट</span></div>
+      <div class="card-name-sub"><span class="en">केबल और फिटिंग</span><span class="hi">Cable & Fittings</span></div>
+      <div class="card-spec"><span class="en">CAT6 / RG6 coaxial, conduit pipe, connectors, junction boxes per camera</span><span class="hi">CAT6 / RG6 कोएक्सियल, कंड्यूट पाइप, कनेक्टर, जंक्शन बॉक्स</span></div>
+      <div class="price-block"><div class="price-label"><span class="en">Fair Price Range</span><span class="hi">उचित मूल्य सीमा</span></div><div class="price-range">₹1,200 – ₹2,500</div><div class="price-unit"><span class="en">per camera point</span><span class="hi">प्रति कैमरा पॉइंट</span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 3. ROAD CONSTRUCTION ══ -->
+<div class="cat-section visible" data-cat="road">
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(212,160,23,0.15);">🚧</div>
+    <div><div class="section-title"><span class="en">Road Construction & Infrastructure</span><span class="hi">सड़क निर्माण और बुनियादी ढांचा</span></div>
+    <div class="section-sub"><span class="en">Barriers, Tiles, Pipes, Bitumen — PWD Grade</span><span class="hi">बैरियर, टाइल्स, पाइप, बिटुमेन — PWD ग्रेड</span></div></div>
+    <div class="section-line"></div>
+  </div>
+  <div class="cards-grid">
+    <div class="item-card" data-keywords="interlocking paver block CC block tiles road footpath M30 M35">
+      <div class="card-top"><div class="card-emoji">🧱</div><div class="gem-tag">GeM</div></div>
+      <div class="card-name"><span class="en">CC Interlocking Paver Blocks</span><span class="hi">CC इंटरलॉकिंग पेवर ब्लॉक</span></div>
+      <div class="card-name-sub"><span class="en">सीसी पेवर ब्लॉक</span><span class="hi">CC Paver Block</span></div>
+      <div class="card-spec"><span class="en">M30/M35, 60mm/80mm thick, 200×100mm, IS 15658, footpath & plaza</span><span class="hi">M30/M35, 60mm/80mm मोटाई, IS 15658, फुटपाथ और प्लाजा</span></div>
+      <div class="price-block"><div class="price-label"><span class="en">Fair Price Range</span><span class="hi">उचित मूल्य सीमा</span></div><div class="price-range">₹28 – ₹55</div><div class="price-unit"><span class="en">per piece (bulk lower)</span><span class="hi">प्रति पीस (थोक में कम)</span></div></div>
+    </div>
+    <div class="item-card" data-keywords="road crash barrier barricade W-beam galvanized highway median safety railing">
+      <div class="card-top"><div class="card-emoji">🛑</div><div class="gem-tag">GeM</div></div>
+      <div class="card-name"><span class="en">Road Crash Barrier / Barricade</span><span class="hi">रोड क्रैश बैरियर / बैरिकेड</span></div>
+      <div class="card-name-sub"><span class="en">सड़क सुरक्षा रेलिंग</span><span class="hi">Road Safety Railing</span></div>
+      <div class="card-spec"><span class="en">W-beam galvanized 3mm, IS 14262, highway median & edge guard</span><span class="hi">W-बीम गैल्वेनाइज्ड 3mm, IS 14262, हाईवे मीडियन</span></div>
+      <div class="price-block"><div class="price-label"><span class="en">Fair Price Range</span><span class="hi">उचित मूल्य सीमा</span></div><div class="price-range">₹850 – ₹1,400</div><div class="price-unit"><span class="en">per running meter</span><span class="hi">प्रति रनिंग मीटर</span></div></div>
+    </div>
+    <div class="item-card" data-keywords="traffic cone delineator 750mm rubber PVC reflective IRC67 safety">
+      <div class="card-top"><div class="card-emoji">🔺</div><div class="gem-tag">GeM</div></div>
+      <div class="card-name"><span class="en">Traffic Safety Cone / Delineator</span><span class="hi">ट्रैफिक सेफ्टी कोन / डिलिनेटर</span></div>
+      <div class="card-name-sub"><span class="en">ट्रैफिक कोन</span><span class="hi">Traffic Cone</span></div>
+      <div class="card-spec"><span class="en">750mm height, rubber/PVC, retro-reflective band, IRC:67</span><span class="hi">750mm ऊंचाई, रबर/PVC, रेट्रो-रिफ्लेक्टिव बैंड, IRC:67</span></div>
+      <div class="price-block"><div class="price-label"><span class="en">Fair Price Range</span><span class="hi">उचित मूल्य सीमा</span></div><div class="price-range">₹350 – ₹750</div><div class="price-unit"><span class="en">per cone</span><span class="hi">प्रति कोन</span></div></div>
+    </div>
+    <div class="item-card" data-keywords="RCC hume pipe drainage culvert sewer 300mm 600mm 900mm 1200mm IS458">
+      <div class="card-top"><div class="card-emoji">🔩</div><div class="gem-tag">GeM</div></div>
+      <div class="card-name"><span class="en">RCC Hume Pipe — Drainage/Culvert</span><span class="hi">RCC ह्यूम पाइप — ड्रेनेज/कलवर्ट</span></div>
+      <div class="card-name-sub"><span class="en">आरसीसी ड्रेनेज पाइप</span><span class="hi">RCC Drainage Pipe</span></div>
+      <div class="card-spec"><span class="en">300mm–1200mm dia, NP3/NP4 class, IS 458, storm water & sewer</span><span class="hi">300mm–1200mm व्यास, NP3/NP4, IS 458, तूफानी पानी और सीवर</span></div>
+      <div class="price-block"><div class="price-label"><span class="en">Fair Price Range</span><span class="hi">उचित मूल्य सीमा</span></div><div class="price-range">₹450 – ₹6,500</div><div class="price-unit"><span class="en">per meter (varies by dia)</span><span class="hi">प्रति मीटर (व्यास अनुसार)</span></div></div>
+    </div>
+    <div class="item-card" data-keywords="rubber speed breaker hump modular bolt IRC road safety">
+      <div class="card-top"><div class="card-emoji">🛤️</div><div class="gem-tag">GeM</div></div>
+      <div class="card-name"><span class="en">Rubber Speed Breaker / Hump</span><span class="hi">रबर स्पीड ब्रेकर / हंप</span></div>
+      <div class="card-name-sub"><span class="en">स्पीड ब्रेकर</span><span class="hi">Speed Breaker</span></div>
+      <div class="card-spec"><span class="en">Modular rubber, yellow/black reflective, bolt-down, IRC SP:67</span><span class="hi">मॉड्यूलर रबर, पीला/काला रिफ्लेक्टिव, बोल्ट-डाउन</span></div>
+      <div class="price-block"><div class="price-label"><span class="en">Fair Price Range</span><span class="hi">उचित मूल्य सीमा</span></div><div class="price-range">₹1,200 – ₹2,800</div><div class="price-unit"><span class="en">per 1m module</span><span class="hi">प्रति 1m मॉड्यूल</span></div></div>
+    </div>
+    <div class="item-card" data-keywords="road stud cat eye reflector marker aluminium ABS highway lane">
+      <div class="card-top"><div class="card-emoji">💠</div><div class="gem-tag">GeM</div></div>
+      <div class="card-name"><span class="en">Road Stud / Cat Eye Reflector</span><span class="hi">रोड स्टड / कैट आई रिफ्लेक्टर</span></div>
+      <div class="card-name-sub"><span class="en">कैट आई रोड स्टड</span><span class="hi">Cat Eye Road Stud</span></div>
+      <div class="card-spec"><span class="en">Aluminium/ABS, double-sided reflector, ceramic insert, all-weather</span><span class="hi">एल्युमीनियम/ABS, डबल-साइडेड रिफ्लेक्टर, सेरामिक इंसर्ट</span></div>
+      <div class="price-block"><div class="price-label"><span class="en">Fair Price Range</span><span class="hi">उचित मूल्य सीमा</span></div><div class="price-range">₹80 – ₹250</div><div class="price-unit"><span class="en">per stud</span><span class="hi">प्रति स्टड</span></div></div>
+    </div>
+    <div class="item-card" data-keywords="manhole cover drain grating cast iron FRP D400 IS1726">
+      <div class="card-top"><div class="card-emoji">🔲</div><div class="gem-tag">GeM</div></div>
+      <div class="card-name"><span class="en">Manhole Cover / Drain Grating</span><span class="hi">मैनहोल कवर / ड्रेन ग्रेटिंग</span></div>
+      <div class="card-name-sub"><span class="en">मैनहोल कवर</span><span class="hi">Manhole Cover</span></div>
+      <div class="card-spec"><span class="en">Cast iron / FRP, D400 load class, IS 1726, 600×600mm / 600×450mm</span><span class="hi">कास्ट आयरन / FRP, D400 लोड क्लास, IS 1726</span></div>
+      <div class="price-block"><div class="price-label"><span class="en">Fair Price Range</span><span class="hi">उचित मूल्य सीमा</span></div><div class="price-range">₹1,200 – ₹4,500</div><div class="price-unit"><span class="en">per unit</span><span class="hi">प्रति नग</span></div></div>
+    </div>
+    <div class="item-card" data-keywords="thermoplastic road marking paint white yellow hot applied glass beads IS164">
+      <div class="card-top"><div class="card-emoji">🖌️</div><div class="gem-tag">GeM</div></div>
+      <div class="card-name"><span class="en">Thermoplastic Road Marking Paint</span><span class="hi">थर्मोप्लास्टिक रोड मार्किंग पेंट</span></div>
+      <div class="card-name-sub"><span class="en">सड़क मार्किंग पेंट</span><span class="hi">Road Marking Paint</span></div>
+      <div class="card-spec"><span class="en">White/yellow, hot-applied, glass beads mixed, 2.5mm thick, IS 164</span><span class="hi">सफेद/पीला, हॉट-अप्लाइड, ग्लास बीड्स मिक्स, IS 164</span></div>
+      <div class="price-block"><div class="price-label"><span class="en">Fair Price Range</span><span class="hi">उचित मूल्य सीमा</span></div><div class="price-range">₹85 – ₹140</div><div class="price-unit"><span class="en">per kg</span><span class="hi">प्रति किलो</span></div></div>
+    </div>
+    <div class="item-card" data-keywords="HDPE pipe water supply drainage irrigation 110mm 160mm 200mm">
+      <div class="card-top"><div class="card-emoji">🔧</div><div class="gem-tag">GeM</div></div>
+      <div class="card-name"><span class="en">HDPE Pipe — Water Supply / Drainage</span><span class="hi">HDPE पाइप — जल आपूर्ति / ड्रेनेज</span></div>
+      <div class="card-name-sub"><span class="en">एचडीपीई पाइप</span><span class="hi">HDPE Pipe</span></div>
+      <div class="card-spec"><span class="en">63mm–200mm dia, PE100, PN6/PN10, IS 4984, for water mains</span><span class="hi">63mm–200mm व्यास, PE100, PN6/PN10, IS 4984, जल वितरण</span></div>
+      <div class="price-block"><div class="price-label"><span class="en">Fair Price Range</span><span class="hi">उचित मूल्य सीमा</span></div><div class="price-range">₹120 – ₹850</div><div class="price-unit"><span class="en">per meter (size dependent)</span><span class="hi">प्रति मीटर (आकार अनुसार)</span></div></div>
+    </div>
+    <div class="item-card" data-keywords="kerb stone kerbing road edge border granite cement concrete footpath">
+      <div class="card-top"><div class="card-emoji">🪨</div><div class="gem-tag">GeM</div></div>
+      <div class="card-name"><span class="en">Kerb Stone / Road Edging</span><span class="hi">कर्ब स्टोन / रोड एजिंग</span></div>
+      <div class="card-name-sub"><span class="en">कर्ब स्टोन</span><span class="hi">Kerb Stone</span></div>
+      <div class="card-spec"><span class="en">Granite/CC, M40, 300×150×600mm, IS 15658, road edging & medians</span><span class="hi">ग्रेनाइट/CC, M40, 300×150×600mm, IS 15658, सड़क किनारे</span></div>
+      <div class="price-block"><div class="price-label"><span class="en">Fair Price Range</span><span class="hi">उचित मूल्य सीमा</span></div><div class="price-range">₹65 – ₹150</div><div class="price-unit"><span class="en">per piece</span><span class="hi">प्रति पीस</span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 4. OFFICE SUPPLIES ══ -->
+<div class="cat-section visible" data-cat="office">
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(255,107,26,0.12);">🏢</div>
+    <div><div class="section-title"><span class="en">Office Supplies & IT Equipment</span><span class="hi">कार्यालय सामग्री और आईटी उपकरण</span></div>
+    <div class="section-sub"><span class="en">Computers, Printers, Stationery — Government Offices</span><span class="hi">कंप्यूटर, प्रिंटर, स्टेशनरी — सरकारी कार्यालय</span></div></div>
+    <div class="section-line"></div>
+  </div>
+  <div class="cards-grid">
+    <div class="item-card" data-keywords="desktop computer PC government office i5 i7 MeitY Windows">
+      <div class="card-top"><div class="card-emoji">🖥️</div><div class="gem-tag">GeM</div></div>
+      <div class="card-name"><span class="en">Desktop Computer — i5/i7</span><span class="hi">डेस्कटॉप कंप्यूटर — i5/i7</span></div>
+      <div class="card-name-sub"><span class="en">सरकारी कार्यालय PC</span><span class="hi">Govt Office PC</span></div>
+      <div class="card-spec"><span class="en">Core i5/i7, 8–16GB RAM, 512GB SSD, Windows 11, MeitY empanelled</span><span class="hi">Core i5/i7, 8–16GB RAM, 512GB SSD, Windows 11, MeitY पैनलबद्ध</span></div>
+      <div class="price-block"><div class="price-label"><span class="en">Fair Price Range</span><span class="hi">उचित मूल्य सीमा</span></div><div class="price-range">₹32,000 – ₹58,000</div><div class="price-unit"><span class="en">per unit</span><span class="hi">प्रति नग</span></div></div>
+    </div>
+    <div class="item-card" data-keywords="laptop notebook government i5 i7 BIS certified office use 14 15 inch">
+      <div class="card-top"><div class="card-emoji">💻</div><div class="gem-tag">GeM</div></div>
+      <div class="card-name"><span class="en">Laptop — Government Grade</span><span class="hi">लैपटॉप — सरकारी ग्रेड</span></div>
+      <div class="card-name-sub"><span class="en">सरकारी लैपटॉप</span><span class="hi">Govt Laptop</span></div>
+      <div class="card-spec"><span class="en">14"/15.6", Core i5 Gen12, 8–16GB RAM, 512GB SSD, BIS certified</span><span class="hi">14"/15.6", Core i5 Gen12, 8–16GB RAM, 512GB SSD, BIS प्रमाणित</span></div>
+      <div class="price-block"><div class="price-label"><span class="en">Fair Price Range</span><span class="hi">उचित मूल्य सीमा</span></div><div class="price-range">₹38,000 – ₹65,000</div><div class="price-unit"><span class="en">per unit</span><span class="hi">प्रति नग</span></div></div>
+    </div>
+    <div class="item-card" data-keywords="laser printer MFP A4 black white colour scan copy duplex network">
+      <div class="card-top"><div class="card-emoji">🖨️</div><div class="gem-tag">GeM</div></div>
+      <div class="card-name"><span class="en">Laser Printer / MFP — A4</span><span class="hi">लेजर प्रिंटर / MFP — A4</span></div>
+      <div class="card-name-sub"><span class="en">लेजर प्रिंटर</span><span class="hi">Laser Printer</span></div>
+      <div class="card-spec"><span class="en">B&W/Colour, print+scan+copy, 30ppm, duplex, network ready</span><span class="hi">B&W/कलर, प्रिंट+स्कैन+कॉपी, 30ppm, डुप्लेक्स, नेटवर्क</span></div>
+      <div class="price-block"><div class="price-label"><span class="en">Fair Price Range</span><span class="hi">उचित मूल्य सीमा</span></div><div class="price-range">₹8,500 – ₹28,000</div><div class="price-unit"><span class="en">B&W – Colour MFP</span><span class="hi">B&W – कलर MFP</span></div></div>
+    </div>
+    <div class="item-card" data-keywords="UPS uninterruptible power supply 600VA 1KVA 2KVA backup AVR office">
+      <div class="card-top"><div class="card-emoji">🔋</div><div class="gem-tag">GeM</div></div>
+      <div class="card-name"><span class="en">UPS — 600VA / 1KVA / 2KVA</span><span class="hi">UPS — 600VA / 1KVA / 2KVA</span></div>
+      <div class="card-name-sub"><span class="en">अनइंटरप्टिबल पावर सप्लाई</span><span class="hi">UPS Power Backup</span></div>
+      <div class="card-spec"><span class="en">Line interactive/Online, 30min backup, auto voltage regulation</span><span class="hi">लाइन इंटरेक्टिव/ऑनलाइन, 30min बैकअप, ऑटो वोल्टेज रेगुलेशन</span></div>
+      <div class="price-block"><div class="price-label"><span class="en">Fair Price Range</span><span class="hi">उचित मूल्य सीमा</span></div><div class="price-range">₹3,500 – ₹14,000</div><div class="price-unit"><span class="en">600VA – 2KVA</span><span class="hi">600VA – 2KVA</span></div></div>
+    </div>
+    <div class="item-card" data-keywords="office stationery A4 paper pen file folder register clip stamp">
+      <div class="card-top"><div class="card-emoji">📎</div><div class="gem-tag">GeM</div></div>
+      <div class="card-name"><span class="en">Office Stationery (Annual Kit)</span><span class="hi">कार्यालय स्टेशनरी (वार्षिक किट)</span></div>
+      <div class="card-name-sub"><span class="en">स्टेशनरी सामग्री</span><span class="hi">Stationery Items</span></div>
+      <div class="card-spec"><span class="en">A4 paper, files, pens, registers, stamps, clips — per workstation</span><span class="hi">A4 पेपर, फाइल, पेन, रजिस्टर, स्टैम्प, क्लिप — प्रति वर्कस्टेशन</span></div>
+      <div class="price-block"><div class="price-label"><span class="en">Fair Price Range</span><span class="hi">उचित मूल्य सीमा</span></div><div class="price-range">₹2,500 – ₹5,000</div><div class="price-unit"><span class="en">per workstation/year</span><span class="hi">प्रति वर्कस्टेशन/वर्ष</span></div></div>
+    </div>
+    <div class="item-card" data-keywords="projector meeting room lumens HDMI VGA WXGA FHD screen presentation">
+      <div class="card-top"><div class="card-emoji">📽️</div><div class="gem-tag">GeM</div></div>
+      <div class="card-name"><span class="en">Projector — Meeting Room</span><span class="hi">प्रोजेक्टर — मीटिंग रूम</span></div>
+      <div class="card-name-sub"><span class="en">प्रोजेक्टर और स्क्रीन</span><span class="hi">Projector & Screen</span></div>
+      <div class="card-spec"><span class="en">3500 lumens, HDMI/VGA, WXGA/FHD, lamp/laser, with screen</span><span class="hi">3500 लुमेन, HDMI/VGA, WXGA/FHD, लैम्प/लेजर, स्क्रीन सहित</span></div>
+      <div class="price-block"><div class="price-label"><span class="en">Fair Price Range</span><span class="hi">उचित मूल्य सीमा</span></div><div class="price-range">₹28,000 – ₹65,000</div><div class="price-unit"><span class="en">per unit + screen</span><span class="hi">प्रति नग + स्क्रीन</span></div></div>
+    </div>
+    <div class="item-card" data-keywords="scanner A3 A4 document flatbed ADF high speed government">
+      <div class="card-top"><div class="card-emoji">🔍</div><div class="gem-tag">GeM</div></div>
+      <div class="card-name"><span class="en">Document Scanner — A4/A3</span><span class="hi">डॉक्यूमेंट स्कैनर — A4/A3</span></div>
+      <div class="card-name-sub"><span class="en">डॉक्यूमेंट स्कैनर</span><span class="hi">Document Scanner</span></div>
+      <div class="card-spec"><span class="en">ADF, 50ppm duplex, 600dpi, USB/network, for digitization projects</span><span class="hi">ADF, 50ppm डुप्लेक्स, 600dpi, USB/नेटवर्क, डिजिटाइजेशन के लिए</span></div>
+      <div class="price-block"><div class="price-label"><span class="en">Fair Price Range</span><span class="hi">उचित मूल्य सीमा</span></div><div class="price-range">₹12,000 – ₹35,000</div><div class="price-unit"><span class="en">per unit</span><span class="hi">प्रति नग</span></div></div>
+    </div>
+    <div class="item-card" data-keywords="WiFi router network switch LAN cable networking government office">
+      <div class="card-top"><div class="card-emoji">📡</div><div class="gem-tag">GeM</div></div>
+      <div class="card-name"><span class="en">Network Switch / WiFi Router</span><span class="hi">नेटवर्क स्विच / WiFi राउटर</span></div>
+      <div class="card-name-sub"><span class="en">नेटवर्किंग उपकरण</span><span class="hi">Networking Equipment</span></div>
+      <div class="card-spec"><span class="en">8/24/48 port gigabit switch or dual-band WiFi 6 router, rack-mount</span><span class="hi">8/24/48 पोर्ट गीगाबिट स्विच या डुअल-बैंड WiFi 6 राउटर</span></div>
+      <div class="price-block"><div class="price-label"><span class="en">Fair Price Range</span><span class="hi">उचित मूल्य सीमा</span></div><div class="price-range">₹3,500 – ₹22,000</div><div class="price-unit"><span class="en">8-port – 48-port managed</span><span class="hi">8-पोर्ट – 48-पोर्ट</span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 5. SANITATION ══ -->
+<div class="cat-section visible" data-cat="sanitation">
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(26,140,90,0.15);">🧹</div>
+    <div><div class="section-title"><span class="en">Sanitation & Waste Management</span><span class="hi">स्वच्छता और अपशिष्ट प्रबंधन</span></div>
+    <div class="section-sub"><span class="en">Dustbins, PPE, Toilets — Swachh Bharat Mission</span><span class="hi">डस्टबिन, PPE, शौचालय — स्वच्छ भारत मिशन</span></div></div>
+    <div class="section-line"></div>
+  </div>
+  <div class="cards-grid">
+    <div class="item-card" data-keywords="dustbin garbage bin waste 120L 240L HDPE municipal wheel lid wet dry">
+      <div class="card-top"><div class="card-emoji">🗑️</div><div class="gem-tag">GeM</div></div>
+      <div class="card-name"><span class="en">Municipal Dustbin — 120L/240L</span><span class="hi">नगरपालिका डस्टबिन — 120L/240L</span></div>
+      <div class="card-name-sub"><span class="en">कचरा पात्र</span><span class="hi">Garbage Bin</span></div>
+      <div class="card-spec"><span class="en">HDPE, 2-wheel, lid, dual colour (wet/dry), BIS mark, UV stabilized</span><span class="hi">HDPE, 2-पहिया, ढक्कन, दो रंग (गीला/सूखा), BIS मार्क</span></div>
+      <div class="price-block"><div class="price-label"><span class="en">Fair Price Range</span><span class="hi">उचित मूल्य सीमा</span></div><div class="price-range">₹1,200 – ₹2,800</div><div class="price-unit"><span class="en">120L – 240L</span><span class="hi">120L – 240L</span></div></div>
+    </div>
+    <div class="item-card" data-keywords="large waste container 660L 1100L 4-wheel community bin steel HDPE fire">
+      <div class="card-top"><div class="card-emoji">🚮</div><div class="gem-tag">GeM</div></div>
+      <div class="card-name"><span class="en">Large Waste Container — 660L/1100L</span><span class="hi">बड़ा कचरा कंटेनर — 660L/1100L</span></div>
+      <div class="card-name-sub"><span class="en">बड़ा कचरा पात्र</span><span class="hi">Large Garbage Container</span></div>
+      <div class="card-spec"><span class="en">4-wheel steel/HDPE, community collection points, fire retardant</span><span class="hi">4-पहिया स्टील/HDPE, सामुदायिक संग्रह बिंदु, फायर रिटार्डेंट</span></div>
+      <div class="price-block"><div class="price-label"><span class="en">Fair Price Range</span><span class="hi">उचित मूल्य सीमा</span></div><div class="price-range">₹6,500 – ₹14,000</div><div class="price-unit"><span class="en">660L – 1100L</span><span class="hi">660L – 1100L</span></div></div>
+    </div>
+    <div class="item-card" data-keywords="broom jhadu sweeping brush street cleaning coconut plastic coir handle">
+      <div class="card-top"><div class="card-emoji">🧹</div><div class="gem-tag">GeM</div></div>
+      <div class="card-name"><span class="en">Street Sweeping Broom / Jhadu</span><span class="hi">स्ट्रीट स्वीपिंग झाड़ू</span></div>
+      <div class="card-name-sub"><span class="en">झाड़ू और सफाई ब्रश</span><span class="hi">Broom & Cleaning Brush</span></div>
+      <div class="card-spec"><span class="en">Coconut/Plastic/Coir, heavy duty, long handle, bulk packs</span><span class="hi">कोकोनट/प्लास्टिक/कॉयर, हेवी ड्यूटी, लंबा हैंडल, बल्क पैक</span></div>
+      <div class="price-block"><div class="price-label"><span class="en">Fair Price Range</span><span class="hi">उचित मूल्य सीमा</span></div><div class="price-range">₹45 – ₹180</div><div class="price-unit"><span class="en">per piece</span><span class="hi">प्रति पीस</span></div></div>
+    </div>
+    <div class="item-card" data-keywords="sanitation worker PPE kit gloves mask boots reflective vest uniform goggles">
+      <div class="card-top"><div class="card-emoji">🦺</div><div class="gem-tag">GeM</div></div>
+      <div class="card-name"><span class="en">Sanitation Worker PPE Kit</span><span class="hi">सफाई कर्मचारी PPE किट</span></div>
+      <div class="card-name-sub"><span class="en">सुरक्षा उपकरण किट</span><span class="hi">Safety Equipment Kit</span></div>
+      <div class="card-spec"><span class="en">Gloves, mask, boots, reflective vest, uniform, goggles — per person</span><span class="hi">दस्ताने, मास्क, बूट, रिफ्लेक्टिव वेस्ट, यूनिफॉर्म, गॉगल</span></div>
+      <div class="price-block"><div class="price-label"><span class="en">Fair Price Range</span><span class="hi">उचित मूल्य सीमा</span></div><div class="price-range">₹1,500 – ₹3,500</div><div class="price-unit"><span class="en">per kit/person</span><span class="hi">प्रति किट/व्यक्ति</span></div></div>
+    </div>
+    <div class="item-card" data-keywords="portable toilet cabin FRP HDPE western indian seat ventilation mobile public">
+      <div class="card-top"><div class="card-emoji">🚻</div><div class="gem-tag">GeM</div></div>
+      <div class="card-name"><span class="en">Portable Toilet Cabin — FRP</span><span class="hi">पोर्टेबल टॉयलेट केबिन — FRP</span></div>
+      <div class="card-name-sub"><span class="en">पोर्टेबल शौचालय</span><span class="hi">Portable Toilet</span></div>
+      <div class="card-spec"><span class="en">FRP/HDPE, western/Indian seat, ventilation, anti-skid floor, mobile</span><span class="hi">FRP/HDPE, वेस्टर्न/इंडियन सीट, वेंटिलेशन, एंटी-स्किड फ्लोर</span></div>
+      <div class="price-block"><div class="price-label"><span class="en">Fair Price Range</span><span class="hi">उचित मूल्य सीमा</span></div><div class="price-range">₹18,000 – ₹35,000</div><div class="price-unit"><span class="en">per unit</span><span class="hi">प्रति नग</span></div></div>
+    </div>
+    <div class="item-card" data-keywords="garbage tricycle cart e-rickshaw compactor 200L 500L MS fabricated">
+      <div class="card-top"><div class="card-emoji">🚛</div><div class="gem-tag">GeM</div></div>
+      <div class="card-name"><span class="en">Garbage Collection Tricycle / Cart</span><span class="hi">कचरा संग्रह ट्राइसिकल / कार्ट</span></div>
+      <div class="card-name-sub"><span class="en">कचरा ट्राइसिकल</span><span class="hi">Garbage Tricycle</span></div>
+      <div class="card-spec"><span class="en">MS fabricated, 200–500L capacity, powder coated, push/e-rickshaw</span><span class="hi">MS फैब्रिकेटेड, 200–500L क्षमता, पाउडर कोटेड</span></div>
+      <div class="price-block"><div class="price-label"><span class="en">Fair Price Range</span><span class="hi">उचित मूल्य सीमा</span></div><div class="price-range">₹8,000 – ₹45,000</div><div class="price-unit"><span class="en">manual – e-tricycle</span><span class="hi">मैनुअल – ई-ट्राइसिकल</span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 6. SIGNAGE & SAFETY ══ -->
+<div class="cat-section visible" data-cat="signage">
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(255,107,26,0.12);">🪧</div>
+    <div><div class="section-title"><span class="en">Signage, Safety & Traffic</span><span class="hi">साइनेज, सुरक्षा और ट्रैफिक</span></div>
+    <div class="section-sub"><span class="en">Road Signs, Boards, Reflectors — IRC Compliant</span><span class="hi">सड़क संकेत, बोर्ड, रिफ्लेक्टर — IRC अनुपालन</span></div></div>
+    <div class="section-line"></div>
+  </div>
+  <div class="cards-grid">
+    <div class="item-card" data-keywords="road traffic sign board aluminium reflective IRC67 warning mandatory">
+      <div class="card-top"><div class="card-emoji">🚦</div><div class="gem-tag">GeM</div></div>
+      <div class="card-name"><span class="en">Road Traffic Sign Board</span><span class="hi">सड़क ट्रैफिक साइन बोर्ड</span></div>
+      <div class="card-name-sub"><span class="en">ट्रैफिक साइन बोर्ड</span><span class="hi">Traffic Sign Board</span></div>
+      <div class="card-spec"><span class="en">Aluminium, Type III HI reflective sheeting, IRC 67, 600–900mm</span><span class="hi">एल्युमीनियम, Type III HI रिफ्लेक्टिव शीटिंग, IRC 67</span></div>
+      <div class="price-block"><div class="price-label"><span class="en">Fair Price Range</span><span class="hi">उचित मूल्य सीमा</span></div><div class="price-range">₹450 – ₹2,200</div><div class="price-unit"><span class="en">per sign (size dependent)</span><span class="hi">प्रति साइन (आकार अनुसार)</span></div></div>
+    </div>
+    <div class="item-card" data-keywords="government office display board name plate flex aluminium MS frame vinyl print">
+      <div class="card-top"><div class="card-emoji">📋</div><div class="gem-tag">GeM</div></div>
+      <div class="card-name"><span class="en">Govt. Office Display Board</span><span class="hi">सरकारी कार्यालय डिस्प्ले बोर्ड</span></div>
+      <div class="card-name-sub"><span class="en">सरकारी डिस्प्ले बोर्ड</span><span class="hi">Govt Display Board</span></div>
+      <div class="card-spec"><span class="en">Flex/Aluminium composite, vinyl print, MS frame, 2×3ft – 4×6ft</span><span class="hi">फ्लेक्स/एल्युमीनियम कम्पोजिट, विनाइल प्रिंट, MS फ्रेम</span></div>
+      <div class="price-block"><div class="price-label"><span class="en">Fair Price Range</span><span class="hi">उचित मूल्य सीमा</span></div><div class="price-range">₹800 – ₹4,500</div><div class="price-unit"><span class="en">per board (size dependent)</span><span class="hi">प्रति बोर्ड</span></div></div>
+    </div>
+    <div class="item-card" data-keywords="safety helmet hard hat construction worker IS2925 HDPE ABS orange yellow">
+      <div class="card-top"><div class="card-emoji">⛑️</div><div class="gem-tag">GeM</div></div>
+      <div class="card-name"><span class="en">Safety Helmet / Hard Hat</span><span class="hi">सेफ्टी हेलमेट / हार्ड हैट</span></div>
+      <div class="card-name-sub"><span class="en">सुरक्षा टोपी</span><span class="hi">Safety Helmet</span></div>
+      <div class="card-spec"><span class="en">HDPE/ABS, IS 2925, ratchet suspension, for road & construction workers</span><span class="hi">HDPE/ABS, IS 2925, रैचेट सस्पेंशन, सड़क एवं निर्माण कर्मचारी</span></div>
+      <div class="price-block"><div class="price-label"><span class="en">Fair Price Range</span><span class="hi">उचित मूल्य सीमा</span></div><div class="price-range">₹120 – ₹350</div><div class="price-unit"><span class="en">per piece</span><span class="hi">प्रति पीस</span></div></div>
+    </div>
+    <div class="item-card" data-keywords="reflective jacket safety vest high visibility worker road construction fluorescent">
+      <div class="card-top"><div class="card-emoji">🦺</div><div class="gem-tag">GeM</div></div>
+      <div class="card-name"><span class="en">Reflective Safety Vest / Jacket</span><span class="hi">रिफ्लेक्टिव सेफ्टी वेस्ट / जैकेट</span></div>
+      <div class="card-name-sub"><span class="en">हाई विजिबिलिटी जैकेट</span><span class="hi">High-Visibility Jacket</span></div>
+      <div class="card-spec"><span class="en">IS 15809, fluorescent yellow/orange, 3M reflective tape, washable</span><span class="hi">IS 15809, फ्लोरोसेंट पीला/नारंगी, 3M रिफ्लेक्टिव टेप, धोने योग्य</span></div>
+      <div class="price-block"><div class="price-label"><span class="en">Fair Price Range</span><span class="hi">उचित मूल्य सीमा</span></div><div class="price-range">₹180 – ₹450</div><div class="price-unit"><span class="en">per piece</span><span class="hi">प्रति पीस</span></div></div>
+    </div>
+    <div class="item-card" data-keywords="LED blinker signal light warning beacon flashing amber road construction site">
+      <div class="card-top"><div class="card-emoji">🚨</div><div class="gem-tag">GeM</div></div>
+      <div class="card-name"><span class="en">LED Warning Beacon / Blinker</span><span class="hi">LED वार्निंग बीकन / ब्लिंकर</span></div>
+      <div class="card-name-sub"><span class="en">चेतावनी बीकन</span><span class="hi">Warning Beacon</span></div>
+      <div class="card-spec"><span class="en">Amber/Red LED, magnetic base, solar/battery powered, IP65, road works</span><span class="hi">एम्बर/रेड LED, मैग्नेटिक बेस, सोलर/बैटरी, IP65, रोड वर्क्स</span></div>
+      <div class="price-block"><div class="price-label"><span class="en">Fair Price Range</span><span class="hi">उचित मूल्य सीमा</span></div><div class="price-range">₹350 – ₹1,200</div><div class="price-unit"><span class="en">per unit</span><span class="hi">प्रति नग</span></div></div>
+    </div>
+    <div class="item-card" data-keywords="water barricade jersey barrier plastic road divider pedestrian">
+      <div class="card-top"><div class="card-emoji">🛡️</div><div class="gem-tag">GeM</div></div>
+      <div class="card-name"><span class="en">Water-Filled Plastic Barricade</span><span class="hi">वाटर-फिल्ड प्लास्टिक बैरिकेड</span></div>
+      <div class="card-name-sub"><span class="en">जर्सी बैरियर (प्लास्टिक)</span><span class="hi">Jersey Barrier Plastic</span></div>
+      <div class="card-spec"><span class="en">HDPE, link connectable, 1m/2m modules, reflective tape, event/road use</span><span class="hi">HDPE, लिंक कनेक्टेबल, 1m/2m मॉड्यूल, रिफ्लेक्टिव टेप</span></div>
+      <div class="price-block"><div class="price-label"><span class="en">Fair Price Range</span><span class="hi">उचित मूल्य सीमा</span></div><div class="price-range">₹2,500 – ₹5,500</div><div class="price-unit"><span class="en">per 1m module</span><span class="hi">प्रति 1m मॉड्यूल</span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 7. ELECTRICAL ══ -->
+<div class="cat-section visible" data-cat="electrical">
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(255,211,0,0.12);">⚡</div>
+    <div><div class="section-title"><span class="en">Electrical & Power Infrastructure</span><span class="hi">विद्युत और पावर इन्फ्रास्ट्रक्चर</span></div>
+    <div class="section-sub"><span class="en">Panels, Cables, Meters, Switches — IS/BIS Certified</span><span class="hi">पैनल, केबल, मीटर, स्विच — IS/BIS प्रमाणित</span></div></div>
+    <div class="section-line"></div>
+  </div>
+  <div class="cards-grid">
+    <div class="item-card" data-keywords="distribution panel DB box MCB RCCB ELCB electrical switchgear enclosure IP54">
+      <div class="card-top"><div class="card-emoji">⚡</div><div class="gem-tag">GeM</div></div>
+      <div class="card-name"><span class="en">Distribution Board / Panel Box</span><span class="hi">डिस्ट्रीब्यूशन बोर्ड / पैनल बॉक्स</span></div>
+      <div class="card-name-sub"><span class="en">DB बॉक्स / पैनल</span><span class="hi">DB Box / Panel</span></div>
+      <div class="card-spec"><span class="en">4–32 way, MCB + RCCB, IP54 enclosure, IS 8623, powder coated MS</span><span class="hi">4–32 वे, MCB + RCCB, IP54 एन्क्लोज़र, IS 8623, पाउडर कोटेड</span></div>
+      <div class="price-block"><div class="price-label"><span class="en">Fair Price Range</span><span class="hi">उचित मूल्य सीमा</span></div><div class="price-range">₹2,500 – ₹18,000</div><div class="price-unit"><span class="en">4-way – 32-way</span><span class="hi">4-वे – 32-वे</span></div></div>
+    </div>
+    <div class="item-card" data-keywords="armoured cable XLPE PVC 4 core 6mm 10mm 16mm 25mm IS1554 electrical wiring">
+      <div class="card-top"><div class="card-emoji">🔋</div><div class="gem-tag">GeM</div></div>
+      <div class="card-name"><span class="en">Armoured Cable — 4-Core (XLPE)</span><span class="hi">आर्मर्ड केबल — 4-कोर (XLPE)</span></div>
+      <div class="card-name-sub"><span class="en">बख्तरबंद केबल</span><span class="hi">Armoured Electrical Cable</span></div>
+      <div class="card-spec"><span class="en">4-core 6mm²–25mm², IS 1554, SWA armoured, for street light circuits</span><span class="hi">4-कोर 6mm²–25mm², IS 1554, SWA आर्मर्ड, स्ट्रीट लाइट सर्किट</span></div>
+      <div class="price-block"><div class="price-label"><span class="en">Fair Price Range</span><span class="hi">उचित मूल्य सीमा</span></div><div class="price-range">₹85 – ₹380</div><div class="price-unit"><span class="en">per meter (size dependent)</span><span class="hi">प्रति मीटर (आकार अनुसार)</span></div></div>
+    </div>
+    <div class="item-card" data-keywords="energy meter digital smart three phase single phase electricity metering IS13779">
+      <div class="card-top"><div class="card-emoji">🔌</div><div class="gem-tag">GeM</div></div>
+      <div class="card-name"><span class="en">Energy Meter — 3-Phase Digital</span><span class="hi">एनर्जी मीटर — 3-फेज डिजिटल</span></div>
+      <div class="card-name-sub"><span class="en">बिजली मीटर</span><span class="hi">Electricity Meter</span></div>
+      <div class="card-spec"><span class="en">Class 0.5s, LCD display, DIN rail, IS 13779, anti-tamper, smart ready</span><span class="hi">Class 0.5s, LCD डिस्प्ले, DIN रेल, IS 13779, एंटी-टैम्पर</span></div>
+      <div class="price-block"><div class="price-label"><span class="en">Fair Price Range</span><span class="hi">उचित मूल्य सीमा</span></div><div class="price-range">₹1,800 – ₹5,500</div><div class="price-unit"><span class="en">single – three phase</span><span class="hi">सिंगल – थ्री फेज</span></div></div>
+    </div>
+    <div class="item-card" data-keywords="MCB miniature circuit breaker RCCB ELCB MCCB 6A 16A 32A 63A IS60898">
+      <div class="card-top"><div class="card-emoji">🔐</div><div class="gem-tag">GeM</div></div>
+      <div class="card-name"><span class="en">MCB / RCCB / MCCB</span><span class="hi">MCB / RCCB / MCCB</span></div>
+      <div class="card-name-sub"><span class="en">सर्किट ब्रेकर</span><span class="hi">Circuit Breaker</span></div>
+      <div class="card-spec"><span class="en">6A–125A, IS 60898/61009, 6kA/10kA breaking capacity, SP/DP/TP</span><span class="hi">6A–125A, IS 60898/61009, 6kA/10kA ब्रेकिंग कैपेसिटी</span></div>
+      <div class="price-block"><div class="price-label"><span class="en">Fair Price Range</span><span class="hi">उचित मूल्य सीमा</span></div><div class="price-range">₹80 – ₹2,800</div><div class="price-unit"><span class="en">MCB – MCCB (per unit)</span><span class="hi">MCB – MCCB (प्रति नग)</span></div></div>
+    </div>
+    <div class="item-card" data-keywords="solar panel 300W 400W 500W poly monocrystalline photovoltaic rooftop MNRE BIS">
+      <div class="card-top"><div class="card-emoji">☀️</div><div class="gem-tag">GeM</div></div>
+      <div class="card-name"><span class="en">Solar Panel — 300W/400W/500W</span><span class="hi">सोलर पैनल — 300W/400W/500W</span></div>
+      <div class="card-name-sub"><span class="en">सौर ऊर्जा पैनल</span><span class="hi">Solar Energy Panel</span></div>
+      <div class="card-spec"><span class="en">Mono PERC, IEC 61215, MNRE approved, 25yr power warranty, rooftop</span><span class="hi">मोनो PERC, IEC 61215, MNRE अनुमोदित, 25 वर्ष पावर वारंटी</span></div>
+      <div class="price-block"><div class="price-label"><span class="en">Fair Price Range</span><span class="hi">उचित मूल्य सीमा</span></div><div class="price-range">₹18,000 – ₹35,000</div><div class="price-unit"><span class="en">300W – 500W per panel</span><span class="hi">300W – 500W प्रति पैनल</span></div></div>
+    </div>
+    <div class="item-card" data-keywords="CCTV power supply 12V 24V switching adapter regulated outdoor indoor surveillance">
+      <div class="card-top"><div class="card-emoji">🔌</div><div class="gem-tag">GeM</div></div>
+      <div class="card-name"><span class="en">SMPS Power Supply — 12V/24V DC</span><span class="hi">SMPS पावर सप्लाई — 12V/24V DC</span></div>
+      <div class="card-name-sub"><span class="en">सर्विलांस पावर सप्लाई</span><span class="hi">Surveillance Power Supply</span></div>
+      <div class="card-spec"><span class="en">5A/10A/20A output, regulated, for CCTV & lighting systems, metal casing</span><span class="hi">5A/10A/20A आउटपुट, रेगुलेटेड, CCTV और लाइटिंग सिस्टम के लिए</span></div>
+      <div class="price-block"><div class="price-label"><span class="en">Fair Price Range</span><span class="hi">उचित मूल्य सीमा</span></div><div class="price-range">₹350 – ₹1,800</div><div class="price-unit"><span class="en">5A – 20A</span><span class="hi">5A – 20A</span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 8. FURNITURE ══ -->
+<div class="cat-section visible" data-cat="furniture">
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(180,120,60,0.15);">🪑</div>
+    <div><div class="section-title"><span class="en">Furniture & Fixtures</span><span class="hi">फर्नीचर और फिक्सचर</span></div>
+    <div class="section-sub"><span class="en">Chairs, Desks, Almirahs, Benches — Government Offices & Parks</span><span class="hi">कुर्सी, डेस्क, अलमारी, बेंच — सरकारी कार्यालय और पार्क</span></div></div>
+    <div class="section-line"></div>
+  </div>
+  <div class="cards-grid">
+    <div class="item-card" data-keywords="office chair revolving mesh executive government fabric ergonomic IS1019">
+      <div class="card-top"><div class="card-emoji">🪑</div><div class="gem-tag">GeM</div></div>
+      <div class="card-name"><span class="en">Office Chair — Revolving/Mesh</span><span class="hi">ऑफिस चेयर — रिवॉल्विंग/मेश</span></div>
+      <div class="card-name-sub"><span class="en">सरकारी कार्यालय कुर्सी</span><span class="hi">Office Chair</span></div>
+      <div class="card-spec"><span class="en">Mesh back, lumbar support, armrests, 5-star base, IS 1019, 100kg rated</span><span class="hi">मेश बैक, लम्बर सपोर्ट, आर्मरेस्ट, 5-स्टार बेस, IS 1019</span></div>
+      <div class="price-block"><div class="price-label"><span class="en">Fair Price Range</span><span class="hi">उचित मूल्य सीमा</span></div><div class="price-range">₹3,500 – ₹9,000</div><div class="price-unit"><span class="en">visitor – executive</span><span class="hi">विजिटर – एग्जेक्यूटिव</span></div></div>
+    </div>
+    <div class="item-card" data-keywords="office table desk steel wood MDF workstation government officer 4x2 5x2">
+      <div class="card-top"><div class="card-emoji">🗃️</div><div class="gem-tag">GeM</div></div>
+      <div class="card-name"><span class="en">Office Table / Workstation Desk</span><span class="hi">ऑफिस टेबल / वर्कस्टेशन डेस्क</span></div>
+      <div class="card-name-sub"><span class="en">सरकारी ऑफिस टेबल</span><span class="hi">Govt Office Table</span></div>
+      <div class="card-spec"><span class="en">4×2ft / 5×2ft, MS/MDF, powder coated, with modesty panel & cable port</span><span class="hi">4×2ft / 5×2ft, MS/MDF, पाउडर कोटेड, मॉडेस्टी पैनल सहित</span></div>
+      <div class="price-block"><div class="price-label"><span class="en">Fair Price Range</span><span class="hi">उचित मूल्य सीमा</span></div><div class="price-range">₹4,500 – ₹14,000</div><div class="price-unit"><span class="en">per unit</span><span class="hi">प्रति नग</span></div></div>
+    </div>
+    <div class="item-card" data-keywords="steel almirah cupboard locker wardrobe government 4 shelf rack IS7690">
+      <div class="card-top"><div class="card-emoji">🗄️</div><div class="gem-tag">GeM</div></div>
+      <div class="card-name"><span class="en">Steel Almirah / Cupboard</span><span class="hi">स्टील अलमारी / कपबोर्ड</span></div>
+      <div class="card-name-sub"><span class="en">स्टील अलमारी</span><span class="hi">Steel Almirah</span></div>
+      <div class="card-spec"><span class="en">CRCA steel, 4-shelf, IS 7690, locking, 1950×900×450mm, powder coated</span><span class="hi">CRCA स्टील, 4-शेल्फ, IS 7690, लॉकिंग, पाउडर कोटेड</span></div>
+      <div class="price-block"><div class="price-label"><span class="en">Fair Price Range</span><span class="hi">उचित मूल्य सीमा</span></div><div class="price-range">₹5,500 – ₹12,000</div><div class="price-unit"><span class="en">per unit</span><span class="hi">प्रति नग</span></div></div>
+    </div>
+    <div class="item-card" data-keywords="park bench garden seat outdoor cast iron MS concrete public municipal">
+      <div class="card-top"><div class="card-emoji">🛋️</div><div class="gem-tag">GeM</div></div>
+      <div class="card-name"><span class="en">Park Bench — Cast Iron / MS</span><span class="hi">पार्क बेंच — कास्ट आयरन / MS</span></div>
+      <div class="card-name-sub"><span class="en">पार्क बेंच</span><span class="hi">Park Bench</span></div>
+      <div class="card-spec"><span class="en">Cast iron frame, hardwood/FRP slats, 1.5m–1.8m length, anti-rust coated</span><span class="hi">कास्ट आयरन फ्रेम, हार्डवुड/FRP स्लैट्स, 1.5m–1.8m, एंटी-रस्ट</span></div>
+      <div class="price-block"><div class="price-label"><span class="en">Fair Price Range</span><span class="hi">उचित मूल्य सीमा</span></div><div class="price-range">₹4,500 – ₹12,000</div><div class="price-unit"><span class="en">per bench</span><span class="hi">प्रति बेंच</span></div></div>
+    </div>
+    <div class="item-card" data-keywords="file rack steel rack shelving 5-tier 6-tier office library document storage">
+      <div class="card-top"><div class="card-emoji">📚</div><div class="gem-tag">GeM</div></div>
+      <div class="card-name"><span class="en">Steel File Rack / Shelving Unit</span><span class="hi">स्टील फाइल रैक / शेल्विंग यूनिट</span></div>
+      <div class="card-name-sub"><span class="en">फाइल रैक और शेल्विंग</span><span class="hi">File Rack</span></div>
+      <div class="card-spec"><span class="en">5–6 tier, CRCA steel, 900×450×1800mm, 75kg/shelf, powder coated</span><span class="hi">5–6 टियर, CRCA स्टील, 900×450×1800mm, 75kg/शेल्फ</span></div>
+      <div class="price-block"><div class="price-label"><span class="en">Fair Price Range</span><span class="hi">उचित मूल्य सीमा</span></div><div class="price-range">₹3,200 – ₹7,500</div><div class="price-unit"><span class="en">per unit</span><span class="hi">प्रति नग</span></div></div>
+    </div>
+    <div class="item-card" data-keywords="notice board bulletin board cork board pin board office school government">
+      <div class="card-top"><div class="card-emoji">📌</div><div class="gem-tag">GeM</div></div>
+      <div class="card-name"><span class="en">Notice / Bulletin Board</span><span class="hi">नोटिस / बुलेटिन बोर्ड</span></div>
+      <div class="card-name-sub"><span class="en">नोटिस बोर्ड</span><span class="hi">Notice Board</span></div>
+      <div class="card-spec"><span class="en">Cork/soft board, aluminium frame, 2×3ft – 4×6ft, wall mount, with glass door</span><span class="hi">कॉर्क/सॉफ्ट बोर्ड, एल्युमीनियम फ्रेम, 2×3ft – 4×6ft, दीवार माउंट</span></div>
+      <div class="price-block"><div class="price-label"><span class="en">Fair Price Range</span><span class="hi">उचित मूल्य सीमा</span></div><div class="price-range">₹800 – ₹3,500</div><div class="price-unit"><span class="en">per unit (size dependent)</span><span class="hi">प्रति नग (आकार अनुसार)</span></div></div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /.catalogue -->
+
+<footer>
+  <div class="footer-logo">🏛️ GovMart GeM</div>
+  <p class="en-block">Authorized GeM Portal supplier for Municipal Corporations, Nagar Parishads, PWD & Government Offices. All products BIS/IS certified, GST compliant, and available for procurement via GeM reverse auction.</p>
+  <p class="hi-block">नगर निगम, नगर परिषद, PWD और सरकारी कार्यालयों के लिए अधिकृत GeM पोर्टल आपूर्तिकर्ता। सभी उत्पाद BIS/IS प्रमाणित, GST अनुपालन, GeM रिवर्स ऑक्शन के माध्यम से उपलब्ध।</p>
+  <div class="contact-row">
+    <div class="contact-item">📱 <a href="tel:8999899116">8999899116</a></div>
+    <div class="contact-item">📍 <span class="en">Nagpur, Maharashtra</span><span class="hi">नागपूर, महाराष्ट्र</span></div>
+    <div class="contact-item">🌐 <span>gem.gov.in</span></div>
+  </div>
+  <div class="footer-badges">
+    <div class="fbadge">✅ GeM Registered Seller</div>
+    <div class="fbadge">🏭 Make in India</div>
+    <div class="fbadge">📋 GST Compliant</div>
+    <div class="fbadge">🔒 BIS/IS Certified Products</div>
+    <div class="fbadge">🏛️ Municipal Corporation Supplier</div>
+  </div>
+  <div class="footer-copy">© 2026 GovMart GeM — All prices are indicative fair market rates. Actual GeM prices may vary via reverse auction.</div>
+</footer>
+
+<script>
+let currentLang = 'en';
+let currentCat = 'all';
+
+function setLang(lang) {
+  currentLang = lang;
+  document.body.classList.toggle('lang-hi', lang === 'hi');
+  document.getElementById('btnEN').classList.toggle('active', lang === 'en');
+  document.getElementById('btnHI').classList.toggle('active', lang === 'hi');
+  const inp = document.getElementById('searchInput');
+  inp.placeholder = lang === 'hi' ? 'वस्तु खोजें...' : 'Search items...';
+}
+
+function filterCat(cat) {
+  currentCat = cat;
+  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  document.querySelectorAll('.cat-section').forEach(sec => {
+    if (cat === 'all' || sec.dataset.cat === cat) {
+      sec.classList.add('visible');
+    } else {
+      sec.classList.remove('visible');
+    }
+  });
+  filterSearch();
+}
+
+function filterSearch() {
+  const q = document.getElementById('searchInput').value.toLowerCase().trim();
+  let anyVisible = false;
+  document.querySelectorAll('.item-card').forEach(card => {
+    const kw = (card.dataset.keywords || '').toLowerCase();
+    const txt = card.innerText.toLowerCase();
+    const match = !q || kw.includes(q) || txt.includes(q);
+    const secMatch = currentCat === 'all' || card.closest('.cat-section')?.dataset.cat === currentCat;
+    card.style.display = (match && secMatch) ? '' : 'none';
+    if (match && secMatch) anyVisible = true;
+  });
+  document.querySelectorAll('.cat-section.visible').forEach(sec => {
+    const visCards = [...sec.querySelectorAll('.item-card')].filter(c => c.style.display !== 'none');
+    sec.style.display = visCards.length === 0 ? 'none' : '';
+  });
+  document.getElementById('noResults').style.display = anyVisible ? 'none' : 'block';
+}
+</script>
+</body>
+</html>
